@@ -694,6 +694,31 @@ function updateLocationsTable(locationsData) {
   });
 }
 
+// Helper function to prettify referrer domain
+function getReferrerName(referrer) {
+  if (
+    !referrer ||
+    referrer === "" ||
+    referrer === document.location.origin ||
+    referrer === "-"
+  )
+    return "Direct";
+  try {
+    const url = new URL(referrer);
+    const host = url.hostname.replace("www.", "");
+    if (host.includes("facebook.com")) return "Facebook";
+    if (host.includes("linkedin.com")) return "LinkedIn";
+    if (host.includes("google.com")) return "Google";
+    if (host.includes("gmail.com")) return "Gmail";
+    if (host.includes("twitter.com")) return "Twitter";
+    if (host.includes("instagram.com")) return "Instagram";
+    if (host.includes("youtube.com")) return "YouTube";
+    return host.charAt(0).toUpperCase() + host.slice(1);
+  } catch {
+    return referrer;
+  }
+}
+
 // Function to update the recent visits table
 function updateRecentVisitsTable(visitsData) {
   const tableBody = document.getElementById("recentVisitsTableBody");
@@ -735,7 +760,7 @@ function updateRecentVisitsTable(visitsData) {
           <i class="bi bi-link-45deg text-muted me-2"></i>
           <span class="text-truncate" style="max-width: 120px;" title="${
             visit.referrer || "Direct"
-          }">${visit.referrer || "Direct"}</span>
+          }">${getReferrerName(visit.referrer)}</span>
         </div>
       </td>
       <td>
